@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import './App.css'
 import 'todomvc-app-css/index.css'
+import './App.css'
 
 export default class App extends Component {
   render() {
