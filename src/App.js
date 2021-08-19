@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import 'todomvc-app-css/index.css'
 import './App.css'
 
+var cors = require('cors')
+
+app.use(cors()) // Use this after the variable declaration
+
 export default class App extends Component {
   render() {
     return (
