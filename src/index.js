@@ -1,7 +1,6 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import 'todomvc-app-css/index.css'
 import TodoApp from './TodoApp'
 import TodoModel from './TodoModel'
 

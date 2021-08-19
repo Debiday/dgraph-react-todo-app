@@ -41,15 +41,26 @@ export default class TodoModel {
 		this.onChanges.forEach(cb => cb())
 	}
 
-	addTodo = title => {
-		this.todos = this.todos.concat({
-			uid: 123,
-			title: title,
-			completed: false,
-		})
-
-		this.inform()
-	}
+    async addTodo(title) {
+        try {
+          const res = await this.dgraph.newTxn().mutate({
+            setJson: {
+              uid: "_:newTodo",
+              is_todo: true,
+              title,
+              completed: false,
+            },
+            commitNow: true,
+          })
+    
+          console.info('Created new to-do with uid', res.data.uids.newTodo)
+        } catch (error) {
+          alert('Database write failed!')
+          console.error('Network error', error)
+        } finally {
+          this.fetchAndInform()
+        }
+      }
 
 	toggleAll = checked => {
 		// Note: it's usually better to use immutable data structures since they're
