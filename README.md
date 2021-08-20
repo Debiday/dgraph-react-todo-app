@@ -1,6 +1,8 @@
-# Getting Started with Create React App
+Dgraph React -- To Do List
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). And based on Dgraph documentation and [tutorial](https://dgraph.io/blog/post/building-todo-list-react-dgraph/) written by Paul Korzhyk.  
+
+My process of debugging the project can be seen in [this blogpost](https://debiday.wordpress.com/2021/08/19/debugging-my-first-react-dgraph-application/).
 
 ## Available Scripts
 
