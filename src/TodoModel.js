@@ -1,5 +1,4 @@
 import * as dgraph from 'dgraph-js-http'
-import Utils from './Utils'
 
 export default class TodoModel {
   constructor() {
@@ -41,57 +40,107 @@ export default class TodoModel {
 		this.onChanges.forEach(cb => cb())
 	}
 
-	addTodo = title => {
-		this.todos = this.todos.concat({
-			uid: 123,
-			title: title,
-			completed: false,
-		})
+  async addTodo(title) {
+    try {
+      const res = await this.dgraph.newTxn().mutate({
+        setJson: {
+          uid: "_:newTodo",
+          is_todo: true,
+          title,
+          completed: false,
+        },
+        commitNow: true,
+      })
 
-		this.inform()
+      console.info('Created new todo with uid', res.data.uids.newTodo)
+    } catch (error) {
+      alert('Database write failed!')
+      console.error('Network error', error)
+    } finally {
+      this.fetchAndInform()
+    }
 	}
 
-	toggleAll = checked => {
-		// Note: it's usually better to use immutable data structures since they're
-		// easier to reason about and React works very well with them. That's why
-		// we use map() and filter() everywhere instead of mutating the array or
-		// todo items themselves.
-		this.todos = this.todos.map(function (todo) {
-			return Utils.extend({}, todo, {completed: checked});
-		})
+	async toggleAll(completed) {
+    try {
+      const toggleJson = this.todos
+          .map(({ uid }) => ({ uid, completed }))
 
-		this.inform()
+      await this.dgraph.newTxn().mutate({
+        setJson: toggleJson,
+        commitNow: true,
+      })
+    } catch (error) {
+      console.error('Network error', error)
+    } finally {
+      this.fetchAndInform()
+    }
+
 	}
 
-	toggle = todoToToggle => {
-		this.todos = this.todos.map(function (todo) {
-			return todo !== todoToToggle ?
-				todo :
-				Utils.extend({}, todo, {completed: !todo.completed});
-		})
-
-		this.inform()
+	async toggle(todoToToggle) {
+    try {
+      await this.dgraph.newTxn().mutate({
+        setJson: {
+          uid: todoToToggle.uid,
+          completed: !todoToToggle.completed,
+        },
+        commitNow: true,
+      })
+    } catch (error) {
+      console.error('Network error', error)
+    } finally {
+      this.fetchAndInform()
+    }
 	}
 
-	destroy = todo => {
-		this.todos = this.todos.filter(function (candidate) {
-			return candidate !== todo;
-		})
-
-		this.inform()
+  async destroy(todo) {
+    try {
+      await this.dgraph.newTxn().mutate({
+        deleteJson: {
+          uid: todo.uid
+        },
+        commitNow: true,
+      })
+    } catch (error) {
+      alert('Database write failed!')
+      console.error('Network error', error)
+    } finally {
+      this.fetchAndInform()
+    }
 	}
 
-	save = (todoToSave, text) => {
-		this.todos = this.todos.map(function (todo) {
-			return todo !== todoToSave ? todo : Utils.extend({}, todo, {title: text})
-		})
-
-		this.inform()
+	async save(todoToSave, newTitle) {
+    try {
+      await this.dgraph.newTxn().mutate({
+        setJson: {
+          uid: todoToSave.uid,
+          title: newTitle,
+        },
+        commitNow: true,
+      })
+    } catch (error) {
+      console.error('Network error', error)
+    } finally {
+      this.fetchAndInform()
+    }
 	}
 
-	clearCompleted = () => {
-		this.todos = this.todos.filter(todo => !todo.completed)
+	async clearCompleted() {
+    try {
+      const uidsToDelete = this.todos
+          .filter(({ completed }) => completed)
+          .map(({ uid }) => ({ uid }))
 
-		this.inform()
+      await this.dgraph.newTxn().mutate({
+        deleteJson: uidsToDelete,
+        commitNow: true,
+      })
+    } catch (error) {
+      alert('Database write failed!')
+      console.error('Network error', error)
+    } finally {
+      this.fetchAndInform()
+    }
 	}
 }

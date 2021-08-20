@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import 'todomvc-app-css/index.css'
+
 import TodoApp from './TodoApp'
 import TodoModel from './TodoModel'
 
@@ -12,5 +13,6 @@ function render() {
     document.getElementById('root'),
   )
 }
+
 model.subscribe(render)
 render()
