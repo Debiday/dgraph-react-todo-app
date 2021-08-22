@@ -2,6 +2,7 @@ version: "3.2"
 services:
   zero:
     image: dgraph/dgraph:v1.0.13
+    # or upgrade to dgraph/dgraph:latest
     volumes:
       - type: volume
         source: dgraph
