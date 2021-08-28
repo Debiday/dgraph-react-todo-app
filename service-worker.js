@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/dgraph-react-todo/precache-manifest.033f4bf2526ac1a3b1847cb18aa04807.js"
+  "/dgraph-react-todo-app/precache-manifest.48c7c844892916e8aa661406161c3ed3.js"
 );
 
 workbox.clientsClaim();
@@ -28,7 +28,7 @@ self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute("/dgraph-react-todo/index.html", {
+workbox.routing.registerNavigationRoute("/dgraph-react-todo-app/index.html", {
   
   blacklist: [/^\/_/,/\/[^/]+\.[^/]+$/],
 });
